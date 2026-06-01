@@ -1,0 +1,26 @@
+# === Core LLM & Vector Libs ===
+# Rerank
+sentence-transformers
+# [신규] Google (Gemini)
+google-generativeai==0.7.2
+
+# Langchain (Core, OpenAI, Qdrant)
+langchain==0.1.16
+langchain-openai>=0.1.0
+langchain-qdrant==0.1.0
+
+# VectorDB (Qdrant)
+qdrant-client==1.9.0
+
+# === Utils ===
+rank-bm25==0.2.2
+tqdm==4.66.5
+python-dotenv==1.0.1
+pandas==2.2.3
+numpy==1.26.4
+chardet==5.2.0
+
+# === Server (FastAPI) ===
+fastapi==0.115.0
+uvicorn==0.30.6
+httpx==0.27.0

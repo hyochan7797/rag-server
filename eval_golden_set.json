@@ -1,0 +1,146 @@
+[
+  {
+    "id": "hard_credit_colloquial_minus",
+    "difficulty": "hard",
+    "question": "국민은행 마통 금리랑 조건 알려줘",
+    "expected_any": ["마이너스한도대출"]
+  },
+  {
+    "id": "hard_credit_generic_without_product",
+    "difficulty": "hard",
+    "question": "국민은행에서 신용으로 받을 수 있는 대출 뭐가 있어?",
+    "expected_any": ["일반신용대출", "마이너스한도대출"]
+  },
+  {
+    "id": "hard_credit_limit_expression",
+    "difficulty": "hard",
+    "question": "국민은행 한도대출 평균 금리 확인해줘",
+    "expected_any": ["마이너스한도대출"]
+  },
+  {
+    "id": "hard_jeonse_abbrev",
+    "difficulty": "hard",
+    "question": "KB 전세대출 한도랑 금리 볼 수 있어?",
+    "expected_any": ["KB주택전세자금대출", "KB플러스전세자금대출"]
+  },
+  {
+    "id": "hard_mortgage_abbrev",
+    "difficulty": "hard",
+    "question": "국민은행 주담대 상품 비교해줘",
+    "expected_any": ["KB스타 아파트담보대출 혼합금리", "KB주택담보대출변동"]
+  },
+  {
+    "id": "hard_apartment_collateral_plain",
+    "difficulty": "hard",
+    "question": "아파트 담보로 빌릴 수 있는 국민은행 대출 찾아줘",
+    "expected_any": ["KB스타 아파트담보대출 혼합금리", "KB주택담보대출변동"]
+  },
+  {
+    "id": "hard_bank_products_branch_join",
+    "difficulty": "hard",
+    "question": "국민은행 영업점 가입 가능한 대출만 찾아줘",
+    "expected_any": ["일반신용대출", "마이너스한도대출", "KB주택전세자금대출", "KB플러스전세자금대출", "KB스타 아파트담보대출 혼합금리", "KB주택담보대출변동"]
+  },
+  {
+    "id": "hard_deposit_mobile_no_product_name",
+    "difficulty": "hard",
+    "question": "스마트폰으로 가입 가능한 국민은행 예금 알려줘",
+    "expected_any": ["KB Star 정기예금"]
+  },
+  {
+    "id": "hard_deposit_generic_best_rate",
+    "difficulty": "hard",
+    "question": "정기예금 금리 비교할 때 국민은행 상품도 같이 보여줘",
+    "expected_any": ["KB Star 정기예금"]
+  },
+  {
+    "id": "hard_deposit_hana_company_name_variant",
+    "difficulty": "hard",
+    "question": "하나은행 모바일 정기예금 금리 조건 알려줘",
+    "expected_any": ["하나의정기예금"]
+  },
+  {
+    "id": "hard_saving_youth_without_exact_name",
+    "difficulty": "hard",
+    "question": "농협 청년 대상 월복리 적금 찾아줘",
+    "expected_any": ["NH1934월복리적금"]
+  },
+  {
+    "id": "hard_saving_woori_mobile",
+    "difficulty": "hard",
+    "question": "우리은행 앱으로 드는 자유적금 뭐 있어?",
+    "expected_any": ["WON적금", "우리SUPER주거래적금"]
+  },
+  {
+    "id": "hard_saving_green_keyword",
+    "difficulty": "hard",
+    "question": "친환경이나 저탄소 관련 적금 상품 찾아줘",
+    "expected_any": ["저탄소 실천 적금", "NH내가Green초록세상적금"]
+  },
+  {
+    "id": "hard_annuity_payment_conditions",
+    "difficulty": "hard",
+    "question": "30세가 월 10만원씩 10년 내고 60세부터 받는 연금저축 수령액 알려줘",
+    "expected_any": ["pnsn_entr_age_nm=30세", "mon_paym_atm_nm=100,000원", "pnsn_strt_age_nm=60세"]
+  },
+  {
+    "id": "hard_annuity_fixed_10_year",
+    "difficulty": "hard",
+    "question": "10년 확정으로 받는 연금저축 옵션 있는 상품 찾아줘",
+    "expected_any": ["pnsn_recp_trm_nm=10년 확정"]
+  },
+  {
+    "id": "hard_annuity_kb_value_stock",
+    "difficulty": "hard",
+    "question": "KB 연금저축 중 가치주 주식형 펀드 찾아줘",
+    "expected_any": ["KB 연금 가치주 증권 전환형 자투자신탁"]
+  },
+  {
+    "id": "hard_annuity_hanwha_guaranteed_rate",
+    "difficulty": "hard",
+    "question": "한화손해보험 연금저축 최저보증이율 있는 상품 알려줘",
+    "expected_any": ["연금저축손해보험 골드연금보험2004", "최저보증이율"]
+  },
+  {
+    "id": "hard_annuity_fund_return",
+    "difficulty": "hard",
+    "question": "연금저축펀드 중 최근 수익률 볼 수 있는 상품 찾아줘",
+    "expected_any": ["연금저축펀드", "평균수익률", "과거수익률1"]
+  },
+  {
+    "id": "hard_company_hyundai_area",
+    "difficulty": "hard",
+    "question": "현대카드 서울이랑 부산 영업 여부 확인해줘",
+    "expected_any": ["현대카드㈜"]
+  },
+  {
+    "id": "hard_company_fubon_contact",
+    "difficulty": "hard",
+    "question": "푸본현대생명 고객센터랑 홈페이지 알려줘",
+    "expected_any": ["푸본현대생명보험주식회사"]
+  },
+  {
+    "id": "hard_company_savings_bank_area",
+    "difficulty": "hard",
+    "question": "웰컴저축은행 지역별 영업 여부 볼 수 있어?",
+    "expected_any": ["웰컴저축은행"]
+  },
+  {
+    "id": "hard_cross_type_mobile_join",
+    "difficulty": "hard",
+    "question": "모바일로 가입 가능한 금융상품을 예금 적금 중심으로 찾아줘",
+    "expected_any": ["정기예금", "적금", "스마트폰"]
+  },
+  {
+    "id": "hard_cross_type_rate_compare",
+    "difficulty": "hard",
+    "question": "국민은행 금리 상품 비교해줘 대출이랑 예금 같이",
+    "expected_any": ["국민은행", "금리", "KB Star 정기예금", "일반신용대출", "마이너스한도대출"]
+  },
+  {
+    "id": "hard_no_bank_product_discovery",
+    "difficulty": "hard",
+    "question": "월복리 적금 중 가입대상이 청년인 상품 찾아줘",
+    "expected_any": ["NH1934월복리적금", "만19세~만34세"]
+  }
+]
