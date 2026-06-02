@@ -21,23 +21,25 @@ ADMIN_API_KEY=...
 
 `ADMIN_API_KEY` must be the same value as the Spring EC2 `.env`.
 
-## Run Qdrant
+## Run with Docker
 
 ```bash
-docker compose up -d qdrant
-```
-
-## Run FastAPI
-
-```bash
-pip install -r requirements.txt
-uvicorn main:app --host 0.0.0.0 --port 8000
+docker compose up -d --build
 ```
 
 Health check:
 
 ```bash
 curl http://localhost:8000/health
+```
+
+## Run FastAPI without Docker
+
+If you prefer a local Python environment:
+
+```bash
+pip install -r requirements.txt
+uvicorn main:app --host 0.0.0.0 --port 8000
 ```
 
 ## Load Vector Data

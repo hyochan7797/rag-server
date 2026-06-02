@@ -8,6 +8,7 @@ from qdrant_client import QdrantClient
 from qdrant_client.http.models import (
     FieldCondition, Filter, MatchAny,
     CreateAliasOperation, CreateAlias,
+    DeleteAliasOperation, DeleteAlias,
 )
 from langchain_qdrant import Qdrant
 from langchain_openai import OpenAIEmbeddings
@@ -229,11 +230,17 @@ async def refresh_vectorstore(new_docs: List[str], new_metas: List[dict]) -> boo
         print(f"  ✅ 검증 완료 ({count}개 벡터)")
 
         # alias 원자적 전환
-        client.update_collection_aliases(change_aliases_operations=[
+        alias_operations = []
+        if old_backing:
+            alias_operations.append(
+                DeleteAliasOperation(delete_alias=DeleteAlias(alias_name=collection_name))
+            )
+        alias_operations.append(
             CreateAliasOperation(create_alias=CreateAlias(
                 collection_name=new_backing, alias_name=collection_name,
             ))
-        ])
+        )
+        client.update_collection_aliases(change_aliases_operations=alias_operations)
 
         if vectorstore is None:
             vectorstore = Qdrant(
