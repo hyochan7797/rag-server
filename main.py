@@ -21,6 +21,9 @@ from rag_pipeline import (
 
 app = FastAPI()
 chat_histories: Dict[str, List[Dict[str, str]]] = {}
+chat_history_locks: Dict[str, asyncio.Lock] = {}
+chat_history_registry_lock = asyncio.Lock()
+MAX_HISTORY_MESSAGES = 10
 generation_model = None
 
 load_dotenv(".env", override=False)
@@ -47,10 +50,38 @@ def configure_gemini():
 configure_gemini()
 
 
+def trim_history(history: List[Dict[str, str]]) -> None:
+    if len(history) > MAX_HISTORY_MESSAGES:
+        del history[:-MAX_HISTORY_MESSAGES]
+
+
+async def get_history_lock(user_id: str) -> asyncio.Lock:
+    async with chat_history_registry_lock:
+        return chat_history_locks.setdefault(user_id, asyncio.Lock())
+
+
+async def remember_user_message(user_id: str, question: str) -> List[Dict[str, str]]:
+    lock = await get_history_lock(user_id)
+    async with lock:
+        history = chat_histories.setdefault(user_id, [])
+        history.append({"role": "user", "content": question})
+        trim_history(history)
+        return list(history)
+
+
+async def remember_model_message(user_id: str, answer: str) -> None:
+    lock = await get_history_lock(user_id)
+    async with lock:
+        history = chat_histories.setdefault(user_id, [])
+        history.append({"role": "model", "content": answer})
+        trim_history(history)
+
+
 class ChatRequest(BaseModel):
     user_id: Union[str, int]
     question: str
     history: Optional[List[Dict[str, str]]] = None
+    history_summary: Optional[str] = None
     use_hyde: bool = False
 
 
@@ -80,17 +111,23 @@ async def health():
     }
 
 
-async def rewrite_query(question: str, history: List[Dict[str, str]]) -> str:
+async def rewrite_query(
+    question: str,
+    history: List[Dict[str, str]],
+    history_summary: Optional[str] = None,
+) -> str:
     if generation_model is None:
         return question
 
     prev_user_msgs = [m["content"] for m in history if m["role"] == "user"]
     context_str = " / ".join(prev_user_msgs[-4:-1]) if len(prev_user_msgs) > 1 else "none"
+    summary_str = history_summary.strip() if history_summary else "none"
     prompt = f"""
 You are optimizing a Korean finance RAG search query.
 Use the previous conversation only to resolve missing context.
 Return only one concise Korean search query.
 
+Long-term user context: {summary_str}
 Previous user context: {context_str}
 Current question: {question}
 """
@@ -132,14 +169,13 @@ async def ask_chat(query: ChatRequest):
     if query.history is not None:
         history = list(query.history) + [{"role": "user", "content": question}]
     else:
-        history = chat_histories.setdefault(user_id, [])
-        history.append({"role": "user", "content": question})
+        history = await remember_user_message(user_id, question)
 
     if not is_vectorstore_ready():
         return {"answer": "데이터가 아직 적재되지 않았습니다. 관리자에게 데이터 갱신을 요청해주세요."}
 
     final_banks, final_types = extract_filters_from_query(question)
-    rewritten = await rewrite_query(question, history)
+    rewritten = await rewrite_query(question, history, query.history_summary)
     expanded_query = expand_domain_synonyms(rewritten)
     hyde_query = await generate_hyde_query(question, expanded_query) if query.use_hyde else None
 
@@ -190,7 +226,7 @@ async def ask_chat(query: ChatRequest):
 
         final_response = final_answer + reliability_msg
         if query.history is None:
-            history.append({"role": "model", "content": final_response})
+            await remember_model_message(user_id, final_response)
         return {"answer": final_response}
     except Exception as e:
         print(f"Gemini answer generation failed: {e}")
