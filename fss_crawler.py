@@ -8,7 +8,8 @@ from dotenv import load_dotenv
 
 from document_aliases import build_product_aliases
 
-load_dotenv("/app/.env")
+load_dotenv(".env", override=False)
+load_dotenv("/app/.env", override=False)
 
 FSS_BASE_URL = "https://finlife.fss.or.kr/finlifeapi"
 FSS_API_KEY = os.getenv("FSS_API_KEY")

@@ -15,12 +15,13 @@ from langchain_openai import OpenAIEmbeddings
 # =======================
 # 환경 설정
 # =======================
+load_dotenv(".env", override=False)
 dotenv_path = "/app/.env"
 if os.path.exists(dotenv_path):
     load_dotenv(dotenv_path=dotenv_path, override=False)
 
 api_key         = os.getenv("OPENAI_API_KEY")
-qdrant_url      = os.getenv("QDRANT_URL", "http://qdrant:6333")
+qdrant_url      = os.getenv("QDRANT_URL", "http://localhost:6333")
 collection_name = os.getenv("COLLECTION_NAME", "loan_docs")
 embedding_chunk_size = int(os.getenv("EMBEDDING_CHUNK_SIZE", "8"))
 qdrant_batch_size = int(os.getenv("QDRANT_BATCH_SIZE", "8"))

@@ -1,6 +1,11 @@
+.env
+.git
+.cache
+.pytest_cache
+.venv
 __pycache__
 *.pyc
-.pytest_cache
-.env
+*.pyo
+*.log
+htmlcov
 venv
-.venv

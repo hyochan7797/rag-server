@@ -1,45 +1,35 @@
-# FastAPI RAG service
+# FastAPI RAG Server
 
-This folder is ready to become a separate FastAPI repository.
+This repository runs the AI/RAG server locally. The Spring server can run on AWS EC2 and call this server through a public tunnel such as ngrok.
 
-## Files to keep
+## Local Setup
 
-Keep all files in this folder except local secrets and caches:
-
-```text
-Dockerfile
-requirements.txt
-main.py
-rag_pipeline.py
-fss_crawler.py
-filter_extraction.py
-query_expansion.py
-document_aliases.py
-eval_retrieval.py
-eval_golden_set.json
-test_integration.py
-app/data/
-.dockerignore
-.env.example
-.gitignore
-docker-compose.yml
-README.md
-```
-
-Do not commit:
-
-```text
-.env
-__pycache__/
-.venv/
-.cache/
-```
-
-## Local setup
+Create `.env` from the example and fill in your real keys:
 
 ```bash
 cp .env.example .env
+```
+
+Required values:
+
+```text
+OPENAI_API_KEY=...
+GOOGLE_API_KEY=...
+FSS_API_KEY=...
+ADMIN_API_KEY=...
+```
+
+`ADMIN_API_KEY` must be the same value as the Spring EC2 `.env`.
+
+## Run Qdrant
+
+```bash
 docker compose up -d qdrant
+```
+
+## Run FastAPI
+
+```bash
 pip install -r requirements.txt
 uvicorn main:app --host 0.0.0.0 --port 8000
 ```
@@ -50,30 +40,46 @@ Health check:
 curl http://localhost:8000/health
 ```
 
-## Public tunnel for AWS Spring
+## Load Vector Data
 
-Run FastAPI locally, then expose it:
+Run this after Qdrant is up and `.env` has the API keys:
+
+```bash
+curl -X POST http://localhost:8000/admin/refresh \
+  -H "X-Admin-Key: YOUR_ADMIN_API_KEY"
+```
+
+Chat test:
+
+```bash
+curl -X POST http://localhost:8000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"user_id":1,"question":"전세대출 추천해줘"}'
+```
+
+## Connect Spring on AWS
+
+Expose local FastAPI:
 
 ```bash
 ngrok http 8000
 ```
 
-Use the generated HTTPS URL in the Spring repository's EC2 `.env`:
+Set these values in the Spring EC2 `.env`:
 
 ```text
-FASTAPI_URL=https://your-ngrok-url/chat
-FASTAPI_ADMIN_URL=https://your-ngrok-url/admin/refresh
+FASTAPI_URL=https://YOUR_NGROK_DOMAIN/chat
+FASTAPI_ADMIN_URL=https://YOUR_NGROK_DOMAIN/admin/refresh
+ADMIN_API_KEY=same-value-as-fastapi
+LOAN_REFRESH_CRON=-
 ```
 
-The `ADMIN_API_KEY` value must match between this FastAPI `.env` and the Spring EC2 `.env`.
-
-## Data refresh
-
-After Qdrant is running and API keys are set:
+Then restart Spring on EC2:
 
 ```bash
-curl -X POST http://localhost:8000/admin/refresh \
-  -H "X-Admin-Key: <ADMIN_API_KEY>"
+cd ~/rag
+docker compose -f docker-compose.spring-aws.yml pull
+docker compose -f docker-compose.spring-aws.yml up -d
 ```
 
-The service no longer crawls or embeds data on startup. It only reuses existing Qdrant data and waits for manual refresh when empty.
+The service does not crawl or embed data during startup. Use `/admin/refresh` manually when you need to rebuild the vector store.

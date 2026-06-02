@@ -4,6 +4,7 @@ from typing import Dict, List, Optional, Union
 
 import google.generativeai as genai
 import uvicorn
+from dotenv import load_dotenv
 from fastapi import FastAPI, Header, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -22,19 +23,13 @@ app = FastAPI()
 chat_histories: Dict[str, List[Dict[str, str]]] = {}
 generation_model = None
 
+load_dotenv(".env", override=False)
+load_dotenv("/app/.env", override=False)
+
 
 def configure_gemini():
     global generation_model
     google_api_key = os.getenv("GOOGLE_API_KEY")
-    if not google_api_key:
-        try:
-            from dotenv import load_dotenv
-
-            load_dotenv("/app/.env")
-            google_api_key = os.getenv("GOOGLE_API_KEY")
-        except Exception:
-            pass
-
     if not google_api_key:
         print("[main.py] GOOGLE_API_KEY is not set.")
         generation_model = None
@@ -199,7 +194,7 @@ async def ask_chat(query: ChatRequest):
         return {"answer": final_response}
     except Exception as e:
         print(f"Gemini answer generation failed: {e}")
-        return {"answer": "죄송합니다. 답변을 생성하는 도중 오류가 발생했습니다."}
+        return {"answer": "죄송합니다. 답변을 생성하는 중 오류가 발생했습니다."}
 
 
 @app.post("/admin/refresh")
